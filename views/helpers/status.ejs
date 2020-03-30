@@ -1,0 +1,13 @@
+
+<% statusHelper = (status, id, itemType)=>{ %>
+    <a href="<%= systemConfig.prefixAdmin %>/<%=itemType%>/change-status/<%=status%>/<%=id%>">
+    <% if(status == "active") {%> 
+            <span class="label label-success">active</span>
+    <%}else if(status == "inactive") {%> 
+            <span class="label label-warning">inactive</span>    
+    <% } %>
+    </a>
+<% } %> 
+
+
+ 

@@ -1,0 +1,56 @@
+<% 
+        pagination = (pagination, currentStatus, querySearch, itemType)=>{ 
+                let {totalItem, numberItemPerPage, currentPage} = pagination;
+                let totalPage = Math.ceil(totalItem/numberItemPerPage);
+                let showingFrom = (currentPage-1)*numberItemPerPage+1;
+                let showingTo = showingFrom + numberItemPerPage-1;
+                if(showingTo>totalItem)showingTo=totalItem;
+                
+                let linkTail = (currentStatus!==''|| currentStatus!== undefined)? "/status/"+currentStatus : '';
+                let linkTail2 = (querySearch!==''|| querySearch!== undefined)? "search="+querySearch+"&": '';
+                let htmlPaginationDetail = '<ul class="pagination text-center">';
+                let paginationDetail = pagination.detai;
+                paginationDetail.map((value,index)=>{
+                        let temptHTM='';
+                        if(index===0 || index===paginationDetail.length-1){
+                                temptHTML = (value.present())? `<li  class=${(value.active()) ? "": "disabled"}><a href="${systemConfig.prefixAdmin}/${itemType}${linkTail}?${linkTail2}page=${(index===0)? 1 : totalPage}">${value.name}</a></li>`:'';    
+                        }else if(index===1 || index===paginationDetail.length-2){
+                                temptHTML = `<li class="${(value.active()) ? '': "disabled"}"><a href="${systemConfig.prefixAdmin}/${itemType}${linkTail}?${linkTail2}page=${(index===1)? currentPage-1 : currentPage+1}">${value.name}</a></li>`
+                        } else{
+                                temptHTML='';
+                                var beginPoint=pagination.currentBeginPoint;
+                                let limit  =  (beginPoint+value.quantity-1<=totalPage) ? beginPoint+value.quantity : totalPage+1;
+
+                                for (let i = beginPoint; i < limit; i++) {
+                                        if(currentPage == i){
+                                            value.active = function (){return false};    
+                                        }else {
+                                               value.active =  function (){return true}; 
+                                        }
+                                        temptHTML+= `<li class=${(value.active()) ? "": "active-disabled"}><a href="${systemConfig.prefixAdmin}/${itemType}${linkTail}?${linkTail2}page=${i}">${i}</a></li>`
+                                }
+                        }
+                        
+                        htmlPaginationDetail+=temptHTML;
+                })
+                htmlPaginationDetail+='</ul>';
+
+                return `<div class="panel panel-info" id="pagination">
+                        <div class="panel-heading">
+                                Pagination
+                                <span>^</span>
+                                <span class="label label-warning">Total pages: ${totalPage}</span>
+                                <span class="label label-danger">Total entries: ${totalItem}</span>
+                        </div>
+                        <div class="panel-body">
+                                <div class="infor-pagination">
+                                <p>Number of elements on the page: <span>${numberItemPerPage}</span></p>
+                                <p>Showing <span> ${showingFrom} </span> to <span>${showingTo}</span> of <span>${totalItem}</span> entries</p>
+                                </div>
+                                <div class="ad-pagination">
+                                        ${htmlPaginationDetail}
+                                </div>
+                        </div>
+                        </div>`;
+        } 
+%>

@@ -1,0 +1,13 @@
+
+<% filterStatusHelper = (statusFilter, searchKeyword, itemType)=>{ 
+        let linkTail = (searchKeyword==='' || searchKeyword===undefined) ? '' : '?search='+searchKeyword;
+        statusFilter.map((value,index)=>{%>
+                <a class="btn m-b-sm btn-<%=value.class%> btn-sm" href="<%=systemConfig.prefixAdmin%>/<%=itemType%>/status<%=value.link+linkTail%>">
+                <%= (value.name).toUpperCase()+" ("+value.count+")" %>  
+                </a>
+        <% }) %>
+<% } %> 
+
+
+
+

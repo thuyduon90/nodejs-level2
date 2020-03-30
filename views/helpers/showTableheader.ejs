@@ -1,0 +1,11 @@
+<% 
+        showTableHeader = (name, itemType, currentField, currentType)=>{ 
+                let linkTail = (currentType=='asc') ? 'desc' : 'asc';
+                let icon = (currentField==name.toLowerCase())? `<i class="fa fa-fw fa-sort-${currentType}"></i>` : '<i class="fa fa-fw fa-sort"></i>';
+               return   `<th class="text-left pointer">
+                                <a href=${systemConfig.prefixAdmin+'/'+itemType+'/sort/'+name.toLowerCase()+'/'+linkTail} class="title_col">
+                                        ${name+icon}
+                                </a>
+                        </th>`
+        } 
+%>
