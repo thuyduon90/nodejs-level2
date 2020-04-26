@@ -7,6 +7,8 @@ var utilsHelpers = require(__base__helpers + 'utils');
 const systemConfig = require(__base__config + 'system');
 const validator = require(__base__validates + 'items');
 const notify = require(__base__config + 'notify');
+let paginationObject = require(__base__config + 'pagination');
+
 
 const indexLink = `/${systemConfig.prefixAdmin}/items`;
 const pageTitleIndex = 'Item Management';
@@ -14,62 +16,18 @@ const pageTitleAdd = pageTitleIndex + ' - Add';
 const pageTitleEdit = pageTitleIndex + ' - Edit';
 const folderView = __base__views + 'pages/items/';
 
-let paginationObject = {
-    numberItemPerPage: 4,
-    currentPage: 3,
-    totalItem: null,
-    currentBeginPoint: 1,
-    detai: [{
-            name: 'Begin',
-            present: function() {
-                return (paginationObject.currentPage < 2) ? false : true
-            },
-            active: function() {
-                return (paginationObject.currentPage < 2) ? false : true
-            }
-        },
-        {
-            name: '<',
-            active: function() {
-                return (paginationObject.currentPage < 2) ? false : true
-            }
-        },
-        {
-            quantity: 3,
-            active: function() {
-                return true;
-            }
-        },
-        {
-            name: '>',
-            active: function() {
-                return (paginationObject.currentPage >= Math.ceil(paginationObject.totalItem / paginationObject.numberItemPerPage)) ? false : true
-            }
-        },
-        {
-            name: 'End',
-            present: function() {
-                return (paginationObject.currentPage >= Math.ceil(paginationObject.totalItem / paginationObject.numberItemPerPage)) ? false : true
-            },
-            active: function() {
-                return (paginationObject.currentPage >= Math.ceil(paginationObject.totalItem / paginationObject.numberItemPerPage)) ? false : true
-            }
-        }
-    ]
-}
+
 var beginPoint = paginationObject.currentBeginPoint;
 
 router.get('(/status/:status)?', async function(req, res, next) {
     let currentStatus = (req.params.status !== undefined) ? req.params.status : 'all';
     let querySearch = (req.query.search !== undefined) ? req.query.search : '';
     let condition = null;
-    let statusFilter = await utilsHelpers.createFilterStatus(currentStatus);
+    let statusFilter = await utilsHelpers.createFilterStatus(currentStatus, 'items');
     let sortField = (req.session.sortField !== undefined) ? req.session.sortField : 'order';
     let sortType = (req.session.sortType !== undefined) ? req.session.sortType : 'asc';
     let sort = {};
     sort[sortField] = sortType;
-
-
     // Get currentPage from request
     paginationObject.currentPage = parseInt((req.query.page !== undefined) ? req.query.page : 1);
     // =========================================================================
@@ -120,7 +78,6 @@ router.get('(/status/:status)?', async function(req, res, next) {
 router.get('/change-status/:status/:id', function(req, res, next) {
     let currentStatus = (req.params.status !== undefined) ? req.params.status : 'active';
     let id = (req.params.id !== undefined) ? req.params.id : '';
-
     let modified = {
         user_id: 1,
         user_name: 'thuyduong',
@@ -214,15 +171,14 @@ router.post('/save', validator.validateForm, (req, res) => {
     if (!errorsObject.isEmpty()) {
         res.render(folderView + 'form', { title: pageTitle, item, errors: errorsObject.errors });
     } else {
-        let { name, order, status, id } = req.body;
+        let { name, order, status, id, content } = req.body;
         if (id === '') {
             let created = {
                 user_id: 1,
                 user_name: 'thuyduong',
                 time: Date.now()
             };
-            new itemModel({ name, status, order, created })
-                .save().then(() => console.log('Sucessfully added'));
+            new itemModel({ name, status, order, created, content }).save();
             req.flash('success', notify.notification.SUCCESSFUL_ADD, false);
             res.redirect(indexLink);
         } else {
@@ -231,8 +187,8 @@ router.post('/save', validator.validateForm, (req, res) => {
                 user_name: 'thuyduong',
                 time: Date.now()
             };
-            let { name, order, status, id } = req.body;
-            itemModel.update({ _id: id }, { name, order, status, modified }, () => {
+            let { name, order, status, id, content } = req.body;
+            itemModel.update({ _id: id }, { name, order, status, modified, content }, () => {
                 req.flash('success', notify.notification.SUCCESSFUL_UPDATE, false);
                 res.redirect(indexLink);
             });

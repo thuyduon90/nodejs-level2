@@ -1,0 +1,19 @@
+
+<% 
+        groupSelectboxelper = (name, groupItems, selectedGroup)=>{
+                let htmlCode=`<select  name="${name}" class="form-control">
+                                <option value="novalue">Choose group</option>`
+                groupItems.forEach(element=>{
+                        let selected = (element.id == selectedGroup)?`selected=selected`: ``;
+
+                        htmlCode +=`<option value="${element.id}" ${selected}>${element.name}</option>`
+                })
+                return htmlCode + `</select>`;            
+        }
+%> 
+
+
+
+
+
+ 

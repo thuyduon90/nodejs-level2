@@ -5,6 +5,7 @@ var schema = new mongoose.Schema({
     name: String,
     status: String,
     order: Number,
+    content: String,
     created: {
         user_id: Number,
         user_name: String,
@@ -17,4 +18,4 @@ var schema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model(databaseInfo.colectionName, schema);
+module.exports = mongoose.model(databaseInfo.colectionName.items, schema);

@@ -1,0 +1,143 @@
+<% include ./../../helpers/status %>
+<% include ./../../helpers/groupACP %>
+<% include ./../../helpers/filter-status %>
+<% include ./../../helpers/pagination %>
+<% include ./../../helpers/showTableheader %>
+
+<% const itemType   = 'groups'; %>
+
+
+<%- locals.flash %>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Search & Filter
+                <a href="<%=systemConfig.prefixAdmin%>/<%=itemType%>/status/all">
+                    <span id="icon-reload" class="glyphicon glyphicon-refresh"></span>
+                </a>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="status-list col-sm-6 pl0">
+                        <!-- Filter Status -->
+                        <% filterStatusHelper(statusFilter, querySearch, itemType) %>
+                    </div>
+                    <div class="col-sm-6">
+                        <form action="<%=systemConfig.prefixAdmin%>/<%=itemType%>/status/<%=currentStatus%>" method="GET">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="search" placeholder="Search for..." value="<%=querySearch%>">
+                                <input type="hidden" value="all">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info" type="submit">Search</button>
+                                </span>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-success" type="button"><a
+                                            href="<%=systemConfig.prefixAdmin%>/<%=itemType%>/status/<%=currentStatus%>">Clear</a></button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                List Items
+            </div>
+            <div class="panel-body">
+                <form role="form" class="form-inline zt-form" id="zt-form" action="" method="post">
+                    <div class="zcontrols">
+                        <select name="action" class="form-control slbAction">
+                            <option value="">Bulk Action</option>
+                            <option value="<%=systemConfig.prefixAdmin%>/<%=itemType%>/change-status/active">
+                                Active
+                            </option>
+                            <option value="<%=systemConfig.prefixAdmin%>/<%=itemType%>/change-status/inactive">
+                                InActive
+                            </option>
+                            <option value="<%=systemConfig.prefixAdmin%>/<%=itemType%>/save-ordering/">
+                                Change Ordering
+                            </option>
+                            <option value="<%=systemConfig.prefixAdmin%>/<%=itemType%>/delete/">
+                                Delete
+                            </option>
+                        </select>
+                        <button class="btn btn-info btnAction" type="button" id="btn-action" value="btnAction" disabled>Apply</button>
+                        <div class="pull-right">
+                            <a href="<%=systemConfig.prefixAdmin%>/<%=itemType%>/form" class="btn btn-warning btn-addNew">Add New
+                            </a>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" class="cbAll" />
+                                    </th>
+                                    <th>#</th>
+                                    <%- showTableHeader('Name', itemType, sortField, sortType, "width:10%")  %> 
+                                    <%- showTableHeader('Group_acp', itemType, sortField, sortType, "width:10%")  %> 
+                                    <%- showTableHeader('Status', itemType, sortField, sortType)  %> 
+                                    <%- showTableHeader('Order', itemType, sortField, sortType, "width:10%")  %> 
+                                    <th>Created</th>
+                                    <th>Modified</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <%
+                                    items.map((item,index)=>{
+                                    %>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="cid" value="<%= item.id %>" />
+                                            </td>
+                                            <td>
+                                                <%=index+1%>
+                                            </td>
+                                            <td>
+                                                <%=item.name%>
+                                            </td>
+                                            <td>
+                                                <%- groupACPHelper(item.group_acp, item.id, itemType) %>
+                                            </td>
+                                            <td>
+                                                <% statusHelper(item.status, item.id, itemType) %>
+                                            </td>
+                                            <td>
+                                                <input type="number" value="<%=item.order%>" class="text-center ordering">
+                                            </td>
+                                            <td>
+                                                <span class="glyphicon glyphicon-user" aria-hidden="true"> <%= item.created.user_name %></span><br/>
+                                                <span class="glyphicon glyphicon-time" aria-hidden="true"> <%= moment(item.created.time).format(systemConfig.format_long_time) %></span><br/>
+                                            </td>
+                                            <td>
+                                                <span class="glyphicon glyphicon-user" aria-hidden="true"> <%= item.modified.user_name %></span><br/>
+                                                <span class="glyphicon glyphicon-time" aria-hidden="true"> <%= moment(item.modified.time).format(systemConfig.format_long_time) %></span><br/>
+                                            </td>
+                                            <td>
+                                                <a href="<%=systemConfig.prefixAdmin%>/<%=itemType%>/form/<%=item.id%>" type="button" class="btn btn-warning btn-sm">Edit</a>
+                                                <a href="<%=systemConfig.prefixAdmin%>/<%=itemType%>/delete/<%=item.id%>" type="button" class="btn btn-danger btn-sm btn-delete">Delete</a>
+                                            </td>
+                                        </tr>
+                                        <%
+                                    })
+                                %>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">  
+        <%- pagination(paginationObject, currentStatus, querySearch, itemType) %> 
+    </div>
+</div>
+
+
+

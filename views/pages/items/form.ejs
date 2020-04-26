@@ -28,6 +28,9 @@
                                     <option value="inactive" <%= (item.status == "inactive") ? 'selected="selected"' : '' %> >Inactive</option>
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <textarea name="content" id="editor1" rows="10" cols="80"><%= item.content %></textarea>
+                            </div>
                             <input class="form-control" name="id" value="<%= item.id %>" type="hidden">
                             <button type="submit" class="btn btn-primary">Submit </button>
                             <a type="button" href="<%=systemConfig.prefixAdmin%>/<%=itemType%>" class="btn btn-default">Cancel</a>

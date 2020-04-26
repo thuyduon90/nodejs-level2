@@ -24,7 +24,14 @@ const databaseInfo = require(__base__config + 'database');
 
 
 // Database connection
-mongoose.connect(`mongodb+srv://${databaseInfo.username}:${databaseInfo.password}@${databaseInfo.database}-k6kid.gcp.mongodb.net/test?retryWrites=true&w=majority`, { useNewUrlParser: true });
+// mongoose.connect(`mongodb+srv://${databaseInfo.username}:${databaseInfo.password}@${databaseInfo.database}-k6kid.gcp.mongodb.net/test?retryWrites=true&w=majority`, { useNewUrlParser: true });
+mongoose.connect('mongodb://admin:admin@localhost:27017/myapp', { useNewUrlParser: true });
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function callback() {
+    console.log("Database connected");
+});
+
 // =================================
 
 var app = express();

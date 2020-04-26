@@ -1,0 +1,13 @@
+
+<% 
+        groupACPHelper = (groupACP, id, itemType)=>{
+                let checked = (groupACP=='yes')? 'check-' : '';
+                return (`<a href="${systemConfig.prefixAdmin}/${itemType}/change-groupacp/${groupACP}/${id}" class="fa fa-${checked}square-o fa-lg"></a>`);
+        }
+%> 
+
+
+
+
+
+ 

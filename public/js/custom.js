@@ -3,8 +3,8 @@ $(document).ready(function() {
     var fmAdmin = $("#zt-form");
 
     // CKEDITOR
-    if ($('textarea#content_ck').length) {
-        CKEDITOR.replace('content_ck');
+    if ($('textarea#editor1').length) {
+        CKEDITOR.replace('editor1');
     }
 
     //call active menu
